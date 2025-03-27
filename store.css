@@ -1,0 +1,296 @@
+
+	@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
+* box-sizing{
+	
+	border-box;
+}
+
+body{
+	background-color: #111110;
+
+}
+
+@media (min-width: 1000px){
+	
+	#default{
+		
+		/*background-color: #111110;*/
+		width: 100%;
+		margin: 0 auto;
+	}
+
+	.ctr{
+
+		text-align: center;
+	}
+
+	#gallery{
+
+		background-color: #111110;
+		margin: 5em auto;
+		margin-bottom: 0;
+		
+	}
+
+	#buttons {
+		ul{
+			list-style-type: none;
+
+			li{
+
+				display: inline;
+
+
+
+				button{
+
+					background-color: #111110;
+					border: none;
+					color: white;
+					font-size: 48px;
+					text-align: center;
+				}
+
+				button:hover{
+
+					color: red;
+				}
+
+
+			}
+		}
+	}
+
+
+	figure{
+
+		padding: 6em;
+
+	}
+
+	figure, figcaption{
+
+		text-align: center;
+		color: white;
+	}
+
+	figcaption{
+
+		font-size: 24px;
+	}
+
+
+
+	h1{
+		a{
+			text-decoration: none;
+			color: white;
+		}
+
+		a:hover{
+
+			color: red;
+		}
+		
+		margin: 0;
+		font-family: "Source Code Pro";
+		letter-spacing: 0.5em;
+
+	}
+
+	#sub{
+
+		color: white;
+		border-bottom: 1px solid white;
+		font-style: italic;
+
+	}	
+
+	.popup{
+
+		background-color: #111110;
+		color: white;
+		border: white solid 2px;
+		display: inline-flex;
+		/*position: fixed;*/
+		visibility: hidden;
+		width: 20%;
+		margin-left: 12em;
+		margin-top: 2em;
+
+
+
+		ul li{
+
+			display: block;
+		}
+	}
+
+	nav{
+
+		text-align: center;
+		padding-top: 0.5em;
+
+
+		ul{
+
+			list-style-type: none;
+			display: flex;
+			justify-content: center;
+
+
+			li{
+
+		
+
+
+				a{
+
+					text-decoration: none;
+					color: white;
+					margin: 2em;
+					font-size: 32px;
+					border-bottom: 2px solid white;
+					padding: 1em;
+
+
+
+				}
+
+				a:hover{
+
+					color: red;
+					border-bottom: solid red 2px;
+
+
+				}
+
+
+			}
+
+		}
+
+
+
+	}
+
+	#shoparea{
+
+		display: grid;
+		grid-template-rows: 1fr;
+		grid-template-columns: 1fr 9fr;
+
+	}
+
+	#shopAll{
+
+		grid-column: 2;
+		grid-row: 1;
+	}
+
+	#sidebar{
+
+		grid-column: 1;
+		grid-row: 1;
+		background-color: white;
+		margin: 2.5em;
+		padding: 2em;
+		margin-bottom: 0;
+
+
+		ul{
+
+			list-style-type: none;
+			line-height: 2em;
+			font-size: 18px;
+
+			li a{
+
+				text-decoration: none;
+				color: black;
+			}
+
+		}
+
+
+
+	}
+
+
+	#shop{
+
+		background-color: white;
+		width: 100%;
+		margin: 0 auto;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: center;
+
+	}
+
+	.item{
+
+		border: 4px solid black;
+		text-align: center;
+		width: 10%;
+		margin: 1.5em;
+		padding: 1em;
+		img{
+			height: 100px;
+			width: 100px;
+	
+		}
+
+		a{
+
+			text-decoration: none;
+			color: black;
+		}
+
+
+	}
+
+
+	#shopHead{
+
+		background-color: white;
+		width: 100%;
+		margin: 0 auto;
+		text-align: center;
+
+		input{
+
+			width: 90%;
+			font-size: 36px;
+		}
+
+		button{
+
+			font-size: 36px;
+		}
+
+
+
+		h2{
+
+			font-size: 48px;
+			text-decoration: underline;
+			font-family: "Source Code Pro";
+			letter-spacing: 0.5em;
+		}
+	}
+
+
+
+
+
+	footer{
+
+		text-align: center;
+		color: white;
+		border-top: 2px solid white;
+	}
+
+}
