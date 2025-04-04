@@ -107,24 +107,15 @@ body{
 
 	}	
 
-	.popup{
+	#popup{
 
-		background-color: #111110;
-		color: white;
-		border: white solid 2px;
-		display: inline-flex;
-		/*position: fixed;*/
-		visibility: hidden;
-		width: 20%;
-		margin-left: 12em;
-		margin-top: 2em;
+		display: inline;
 
-
-
-		ul li{
-
+		ul{
 			display: block;
+			visibility: hidden;
 		}
+
 	}
 
 	nav{
@@ -193,15 +184,24 @@ body{
 
 		grid-column: 1;
 		grid-row: 1;
-		background-color: white;
-		margin: 2.5em;
-		padding: 2em;
-		margin-bottom: 0;
+		width: 100%;
+		/*temporary height fix*/
+		margin-top: 19%;
 
+		background-color: white;
+		margin-right: 2.5em;
+		padding-right: 2em;
+		text-align: left;
+
+		label{
+
+			display: block;
+		}
 
 		ul{
 
 			list-style-type: none;
+			padding-top: 2em;
 			line-height: 2em;
 			font-size: 18px;
 
@@ -216,6 +216,8 @@ body{
 
 
 	}
+
+
 
 
 	#shop{
@@ -252,6 +254,26 @@ body{
 
 	}
 
+	#pr{
+
+
+		text-align: center;
+		margin-top: 20vh;
+
+		input{
+
+			width: 20%;
+			text-align: center;
+
+		}
+
+		button{
+
+			display: block;
+			margin: 0 auto;
+			margin-top: 2em;
+		}
+	}
 
 	#shopHead{
 

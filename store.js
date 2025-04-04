@@ -1,6 +1,8 @@
 var script = document.createElement('script');
+
 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
 script.type = "text/javascript";
+
 
 function change(display, num){
 
@@ -43,16 +45,33 @@ function change(display, num){
 };
 
 
-function loadItems(page, filter){
+
+async function loadItems(){
 
 	let url = '#';
-	let src = 'img/item1.png';
 
-	for(let i=0; i<8; ++i){
+	
+	const resp = await fetch('http://localhost:3000/item');
+	const items = await resp.json();
 
+
+
+	items.forEach(item => {
+
+		const i = item.id;
+		console.log(i);
+		let inc=(i+2)*(i+2)+i;
+		let itemDiv = inc*inc;
+		let aDiv = inc*inc*inc;
+		//algorithm to avoid collisions
+		//(i+2)^2 + i
+		
+		//add where condition for filters
+		
+		//condense
 		$('<div>', {
 
-			id: i*i,
+			id: itemDiv,
 
 			class: 'item'
 
@@ -61,40 +80,85 @@ function loadItems(page, filter){
 		$('<a>', {
 
 			href: url,
+			id: aDiv
 
-			id: i*i*i
-
-		}).appendTo('#'+i*i);
+		}).appendTo('#'+ itemDiv);
 
 		$('<img>', {
 
-			src: src
+			src: 'img/' + item.src + '.png'
 
-		}).appendTo('#' + i*i*i);
+		}).appendTo('#' + aDiv);
 
 		$('<h3>', {
 
-			text: 'item ' + i
+			text: item.name
 
-		}).appendTo('#'+i*i*i);
+		}).appendTo('#'+ aDiv);
 
 		$('<p>', {
 
-			text: '$' + i
-
-		}).appendTo('#'+i*i*i);
+			text: '$' + item.price 
 
 
+		}).appendTo('#' + aDiv);
 
-	//	('#item').attr('class', 'item');
+		$('<p>', { 
 
-	};
+			text: item.category
+
+		}).appendTo('#' + aDiv);
+
+		let gen = (item.type == 'M' ? 'Men' : 'Women');
+
+		$('<p>', {
+
+			text: gen
+
+		}).appendTo('#' + aDiv);
+
+		if(parseInt(item.sale) == 1) {
+
+			$('<p>', {
+
+				text: sale
+			
+			}).appendTo('#' + aDiv);
+		}
+
+		let sizeCheck = '';
+		const itemSize = parseInt(item.size);
+		const arr = ['XS', ' S', ' M', ' L', ' XL'];
+
+		for(let i=0; i<itemSize+1; ++i) {
+
+			sizeCheck += arr[i];
+		}
+
+		
+		$('<p>', {
+
+				text: sizeCheck
+				
+			}).appendTo('#' + aDiv);
+
+		$('<p>', {
+
+			text: 'ID: ' + item.id
+
+		}).appendTo('#' + aDiv);
+
+
+	});
 
 		$('#shop').css('display', 'flex');
-		$('shop').css('flex-wrap', 'wrap');
+		$('#shop').css('flex-wrap', 'wrap');
 };
 
-	
+
+
+
+
 
 
 
@@ -127,18 +191,18 @@ script.onload = function(){
 
 		$('#mens').hover(function(){
 			console.log("hovering");
-			$('.popup').css('visibility', 'visible');
+			$('#popup').css('visibility', 'visible');
 
 
 		});
 
 		$('#mens').mouseout(function(){
 
-			$('.popup').eq(0).css('visibility', 'hidden');
+			$('#popup').eq(0).css('visibility', 'hidden');
 		});
 
 
-		loadItems(0,0);
+		loadItems();
 
 	});
 };

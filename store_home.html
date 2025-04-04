@@ -27,12 +27,22 @@
 				<nav>
 					<ul>
 						<li><a href="store_mens.html" id="mens">Men's</a></li>
-
 						<li><a href="store_womens.html" id="womens">Women's</a></li>
 						<li><a href="store_sale" id="sale">Sale</a></li>
 						<li><a href="store_locations.html" id="locations">Locations</a></li>
 					</ul>
 				</nav>
+
+				<div id="popup">
+
+					<ul>
+
+						<li><a href='#'>Test1</a></li>
+						<li><a href='#'>Test2</a></li>
+
+					</ul>
+
+				</div>
 
 			<!--	<div class="popup">
 							<ul>
@@ -82,14 +92,60 @@
 
 			<div id="shoparea">
 
+			<!-- do in js after -->
+
 			<div id="sidebar">
+
+				<h2 style="text-align: center">Filter By</h2>
+
 				<ul>
-					<li><a href='#'>One</a></li>
-					<li><a href='#'>Two</a></li>
-					<li><a href='#'>Three</a></li>
-					<li><a href='#'>Four</a></li>
+					<li>
+						<details open>
+							<summary>Size</summary>
+							<label><input type="checkbox">XS</label>
+							<label><input type="checkbox">S</label>
+							<label><input type="checkbox">M</label>
+							<label><input type="checkbox">L</label>
+							<label><input type="checkbox">XL</label>
+						</details>
+					</li>
+
+					<li>
+						<details open>
+							<summary>Category</summary>
+							<label><input type="checkbox">Shirts</label>
+							<label><input type="checkbox">OutdoorWear</label>
+							<label><input type="checkbox">Pants</label>
+							<label><input type="checkbox">Footwear</label>
+						</details>						
+					</li>
+
+					<li>
+						<details open>
+							<summary>Gender</summary>
+							<label><input type="checkbox">Men</label>
+							<label><input type="checkbox">Women</label>
+						</details>
+
+					</li>
+
+					<li>
+						
+						<details open>
+							<summary>Price</summary>
+								<label><input type="checkbox">Ascending</label>
+								<label><input type="checkbox">Descending</label>
+						</details>						
+					</li>
 
 				</ul>
+
+				<div id="pr">
+					<h3>Price Range</h3>
+					<input type="text" maxlength="5">
+					<input type="text" maxlength="5">
+					<button type="submit" value="Search">Search</button>
+				</div>
 			</div>
 			<div id="shopAll">
 			<div id="shopHead">
