@@ -102,29 +102,29 @@
 					<li>
 						<details open>
 							<summary>Size</summary>
-							<label><input type="checkbox">XS</label>
-							<label><input type="checkbox">S</label>
-							<label><input type="checkbox">M</label>
-							<label><input type="checkbox">L</label>
-							<label><input type="checkbox">XL</label>
+							<label><input type="checkbox" id="xs">XS</label>
+							<label><input type="checkbox" id="s">S</label>
+							<label><input type="checkbox" id="m">M</label>
+							<label><input type="checkbox" id="l">L</label>
+							<label><input type="checkbox" id="xl">XL</label>
 						</details>
 					</li>
 
 					<li>
 						<details open>
 							<summary>Category</summary>
-							<label><input type="checkbox">Shirts</label>
-							<label><input type="checkbox">OutdoorWear</label>
-							<label><input type="checkbox">Pants</label>
-							<label><input type="checkbox">Footwear</label>
+							<label><input type="checkbox" id="shirts">Shirts</label>
+							<label><input type="checkbox" id="outdoor">OutdoorWear</label>
+							<label><input type="checkbox" id="pants">Pants</label>
+							<label><input type="checkbox" id="foot">Footwear</label>
 						</details>						
 					</li>
 
 					<li>
 						<details open>
 							<summary>Gender</summary>
-							<label><input type="checkbox">Men</label>
-							<label><input type="checkbox">Women</label>
+							<label><input type="checkbox" id="men">Men</label>
+							<label><input type="checkbox" id="women">Women</label>
 						</details>
 
 					</li>
@@ -133,18 +133,21 @@
 						
 						<details open>
 							<summary>Price</summary>
-								<label><input type="checkbox">Ascending</label>
-								<label><input type="checkbox">Descending</label>
+								<label><input type="checkbox" id="asc">Ascending</label>
+								<label><input type="checkbox" id="des">Descending</label>
 						</details>						
 					</li>
 
 				</ul>
 
+				
+
 				<div id="pr">
 					<h3>Price Range</h3>
-					<input type="text" maxlength="5">
-					<input type="text" maxlength="5">
-					<button type="submit" value="Search">Search</button>
+					<input type="text" maxlength="5" id="min">
+					<input type="text" maxlength="5" id="max">
+					<!--<button type="submit" value="Search">Search</button>-->
+					<button id="apply"><a href='#'>Apply</a></button>
 				</div>
 			</div>
 			<div id="shopAll">

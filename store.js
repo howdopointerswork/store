@@ -45,6 +45,20 @@ function change(display, num){
 };
 
 
+function txtEle(ele, txt, app) {
+
+	$(ele, {
+
+		text: txt
+
+	}).appendTo(app);
+
+
+
+}
+
+
+
 
 async function loadItems(){
 
@@ -55,7 +69,28 @@ async function loadItems(){
 	const items = await resp.json();
 
 
+	const arr = ['xs', 's', 'm', 'l', 'xl', 'shirts', 'outdoor', 'pants', 'foot', 
+'men', 'women', 'asc', 'des', 'min', 'max', 'apply'];
+	
+	$('#apply').click(function(){ 
 
+		console.log('clicked');
+
+		for(let box of arr) {
+
+
+			if($('#' + box).prop('checked')){
+
+				console.log(box);
+				//add here
+			}
+		}
+
+	});
+
+
+
+	
 	items.forEach(item => {
 
 		const i = item.id;
@@ -63,90 +98,62 @@ async function loadItems(){
 		let inc=(i+2)*(i+2)+i;
 		let itemDiv = inc*inc;
 		let aDiv = inc*inc*inc;
+
 		//algorithm to avoid collisions
 		//(i+2)^2 + i
 		
 		//add where condition for filters
-		
+
+	//	if(item.type == 'M'){
 		//condense
-		$('<div>', {
+			$('<div>', {
 
-			id: itemDiv,
+				id: itemDiv,
 
-			class: 'item'
+				class: 'item'
 
-		}).appendTo('#shop');
+			}).appendTo('#shop');
 
-		$('<a>', {
+			$('<a>', {
 
-			href: url,
-			id: aDiv
+				href: url,
+				id: aDiv
 
-		}).appendTo('#'+ itemDiv);
+			}).appendTo('#'+ itemDiv);
 
-		$('<img>', {
+			$('<img>', {
 
-			src: 'img/' + item.src + '.png'
+				src: 'img/' + item.src + '.png'
 
-		}).appendTo('#' + aDiv);
-
-		$('<h3>', {
-
-			text: item.name
-
-		}).appendTo('#'+ aDiv);
-
-		$('<p>', {
-
-			text: '$' + item.price 
-
-
-		}).appendTo('#' + aDiv);
-
-		$('<p>', { 
-
-			text: item.category
-
-		}).appendTo('#' + aDiv);
-
-		let gen = (item.type == 'M' ? 'Men' : 'Women');
-
-		$('<p>', {
-
-			text: gen
-
-		}).appendTo('#' + aDiv);
-
-		if(parseInt(item.sale) == 1) {
-
-			$('<p>', {
-
-				text: sale
-			
-			}).appendTo('#' + aDiv);
-		}
-
-		let sizeCheck = '';
-		const itemSize = parseInt(item.size);
-		const arr = ['XS', ' S', ' M', ' L', ' XL'];
-
-		for(let i=0; i<itemSize+1; ++i) {
-
-			sizeCheck += arr[i];
-		}
-
-		
-		$('<p>', {
-
-				text: sizeCheck
-				
 			}).appendTo('#' + aDiv);
 
-		$('<p>', {
 
-			text: 'ID: ' + item.id
+			txtEle('<h3>', item.name, '#' + aDiv);
+			txtEle('<p>', '$' + item.price, '#' + aDiv);
+			txtEle('<p>', item.category, '#' + aDiv);
 
-		}).appendTo('#' + aDiv);
+			let gen = (item.type == 'M' ? 'Men' : 'Women');
+
+			txtEle('<p>', gen, '#' + aDiv);
+
+			if(parseInt(item.sale) == 1) {
+
+				txtEle('<p>', sale, '#' + aDiv);
+			}
+
+			let sizeCheck = '';
+			const itemSize = parseInt(item.size);
+			const arr = ['XS', ' S', ' M', ' L', ' XL'];
+
+			for(let i=0; i<itemSize+1; ++i) {
+
+				sizeCheck += arr[i];
+			}
+
+			txtEle('<p>', sizeCheck, '#' + aDiv);
+			txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);
+
+			//}
 
 
 	});

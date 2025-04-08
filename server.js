@@ -4,6 +4,11 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 
+var script = document.createElement('script');
+
+script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
+script.type = "text/javascript";
+
 
 const ex = express();
 const port = 3000;
@@ -37,6 +42,9 @@ ex.listen(port, () => {
 
 	console.log("Server is running");
 
+
+	
+
 });
 
 
@@ -50,6 +58,8 @@ async function lab(){
 		const categories = ['Shirts', 'Shirts', 'Outdoorwear', 'Pants', 'Outdoorwear', 'Footwear'];
 		let gender = 'M';
 		let diff = 0;
+
+
 
 		//0 for size is all
 		//Anything else is "up to n"

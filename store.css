@@ -220,6 +220,7 @@ body{
 
 
 
+
 	#shop{
 
 		background-color: white;
@@ -254,11 +255,21 @@ body{
 
 	}
 
+	#apply{
+
+		text-align: center;
+		margin: 0 auto;
+		width: 75%;
+		display: block;
+		
+	}
+
+
 	#pr{
 
 
 		text-align: center;
-		margin-top: 20vh;
+
 
 		input{
 
