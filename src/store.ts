@@ -1,5 +1,6 @@
 var script = document.createElement('script');
 
+
 script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
 script.type = "text/javascript";
 
@@ -36,7 +37,7 @@ function change(display, num){
 		$('#b1').css('color', 'white');
 	}
 
-	imgSrc.attr('src', 'img/' + display);
+	imgSrc.attr('src', '../img/' + display);
 
 	$('figcaption').html(txt[num]);
 
@@ -57,6 +58,75 @@ function txtEle(ele, txt, app) {
 
 }
 
+//try typescript here
+//then convert rest
+function populate(data, ids: string[]){
+
+	//remove later
+	let url: string = '#';
+//	$(url + 'shop').empty();
+	console.log('populating..');
+	console.log('ids test: ' + ids[1]);
+
+	data.forEach(item => {
+		
+		const i = item.id;
+		let inc=(i+2)*(i+2)+i;
+		let itemDiv = inc*inc;
+		let aDiv = inc*inc*inc;
+
+		$('<div>', {
+
+			id: itemDiv,
+
+			class: 'item'
+
+		}).appendTo('#shop');
+
+		$('<a>', {
+
+			href: url,
+			id: aDiv
+
+		}).appendTo('#'+ itemDiv);
+
+		$('<img>', {
+
+			src: '../img/' + item.src + '.png'
+
+		}).appendTo('#' + aDiv);
+
+
+		txtEle('<h3>', item.name, '#' + aDiv);
+		txtEle('<p>', '$' + item.price, '#' + aDiv);
+		txtEle('<p>', item.category, '#' + aDiv);
+
+		let gen = (item.type == 'M' ? 'Men' : 'Women');
+
+		txtEle('<p>', gen, '#' + aDiv);
+
+		if(item.sale) {
+
+			txtEle('<p>', item.sale, '#' + aDiv);
+		}
+
+		let sizeCheck = '';
+		const itemSize = item.size;
+		const arr = ['XS', ' S', ' M', ' L', ' XL'];
+
+		for(let i=0; i<itemSize+1; ++i) {
+
+			sizeCheck += arr[i];
+		}
+
+		txtEle('<p>', sizeCheck, '#' + aDiv);
+		txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);
+
+});
+
+
+};
+
 
 
 
@@ -69,12 +139,22 @@ async function loadItems(){
 	const items = await resp.json();
 
 
-	const arr = ['xs', 's', 'm', 'l', 'xl', 'shirts', 'outdoor', 'pants', 'foot', 
-'men', 'women', 'asc', 'des', 'min', 'max', 'apply'];
+	const arr = ['0', '1', '2', '3', '4', 'Shirts', 'Outdoorwear', 'Pants', 'Footwear', 
+'M', 'F', 'asc', 'des', 'min', 'max', 'apply'];
+
+	const checked = [];
+	let load = true;
+
+	console.log('length: ' + checked.length);
+
+//need defualt display
+//so turn into one or more functions
 	
 	$('#apply').click(function(){ 
 
 		console.log('clicked');
+		checked.length = 0;
+		$('#shop').empty();
 
 		for(let box of arr) {
 
@@ -82,31 +162,37 @@ async function loadItems(){
 			if($('#' + box).prop('checked')){
 
 				console.log(box);
+				checked.push(box);
+				console.log('new length: ' + checked.length);
+	
 				//add here
 			}
 		}
 
-	});
+	//});
 
 
+		
 
-	
-	items.forEach(item => {
+
+		items.forEach(item => {
 
 		const i = item.id;
-		console.log(i);
 		let inc=(i+2)*(i+2)+i;
 		let itemDiv = inc*inc;
 		let aDiv = inc*inc*inc;
 
-		//algorithm to avoid collisions
-		//(i+2)^2 + i
-		
-		//add where condition for filters
+		console.log('checked length: ' + checked.length);
 
-	//	if(item.type == 'M'){
-		//condense
-			$('<div>', {
+		for(let box of checked) {
+			console.log('box ' + box);
+			//fix to include AND logic
+			if( (box == item.category) || (box == item.type) || (box == item.size) ){
+
+			
+				console.log(box);
+
+				$('<div>', {
 
 				id: itemDiv,
 
@@ -123,7 +209,7 @@ async function loadItems(){
 
 			$('<img>', {
 
-				src: 'img/' + item.src + '.png'
+				src: '../img/' + item.src + '.png'
 
 			}).appendTo('#' + aDiv);
 
@@ -138,11 +224,11 @@ async function loadItems(){
 
 			if(parseInt(item.sale) == 1) {
 
-				txtEle('<p>', sale, '#' + aDiv);
+				txtEle('<p>', item.sale, '#' + aDiv);
 			}
 
 			let sizeCheck = '';
-			const itemSize = parseInt(item.size);
+			const itemSize = item.size;
 			const arr = ['XS', ' S', ' M', ' L', ' XL'];
 
 			for(let i=0; i<itemSize+1; ++i) {
@@ -152,14 +238,55 @@ async function loadItems(){
 
 			txtEle('<p>', sizeCheck, '#' + aDiv);
 			txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);
+			break;
+			}
+
+		
+		}
+
+				
+		if(checked.length == 0){
+			
+			$('#shop').empty();
+
+			load = false;
+
+			populate(items, arr);
+
+		}
+
 
 			//}
+		
+
+	});
+
+
+		$('#shop').css('display', 'flex');
+		$('#shop').css('flex-wrap', 'wrap');
 
 
 	});
 
-		$('#shop').css('display', 'flex');
-		$('#shop').css('flex-wrap', 'wrap');
+
+	if(checked.length == 0 && load){
+
+
+		for(let id of arr){
+
+			if($('#' + id).prop('checked')){
+
+				console.log("Currently checked: " + id);
+				$('#' + id).prop('checked', false);
+			}
+		}
+
+		populate(items, arr);
+
+		console.log("Checked is empty");
+
+	}		
+
 };
 
 

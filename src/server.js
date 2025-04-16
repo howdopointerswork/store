@@ -4,11 +4,6 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 
-var script = document.createElement('script');
-
-script.src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
-script.type = "text/javascript";
-
 
 const ex = express();
 const port = 3000;
@@ -41,8 +36,6 @@ ex.get('/item', async (req, res) => {
 ex.listen(port, () => {
 
 	console.log("Server is running");
-
-
 	
 
 });
