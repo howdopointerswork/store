@@ -54,28 +54,229 @@ function txtEle(ele, txt, app) {
 
 	}).appendTo(app);
 
-
-
 }
+
+
+function minMax(min, max): number{
+
+	const min_ne = (min.val() != undefined && min.val() != '' && !isNaN(min.val()));
+	const max_ne = (max.val() != undefined && max.val() != '' && !isNaN(max.val()));
+	
+	const min_e = min.val() == undefined || min.val() == '' || isNaN(min.val());
+	const max_e = max.val() == undefined || max.val() == '' || isNaN(max.val());
+
+
+	if(min_ne && max_ne){
+
+		return 1;
+	}
+	else if(min_ne && max_e){
+
+		return 2;
+	}
+	else if(min_e && max_ne){
+
+		return 3;
+	}
+	
+	return 0;
+	
+};
+
+function inRange(current: number, value: number, min, max): boolean{
+
+	console.log('current is: ' + current);
+
+	switch(current){
+
+		case 0:
+			console.log('both empty');
+			return true;
+
+
+		case 1:
+
+			if(value >= Number(min.val()) && value <= Number(max.val())){
+
+				return true;
+			}
+			else{
+
+				return false;
+			}
+		
+		case 2:
+			
+			if(value >= Number(min.val())){
+
+				return true;
+			}
+			else{
+
+				return false;
+			}
+			
+
+		case 3:
+		
+			if(value <= Number(max.val())){
+
+				return true;
+			}
+			else{
+
+				return false;
+			}
+			
+		
+		default:
+
+			return false;
+					
+	}
+
+	return false;
+} 
 
 //try typescript here
 //then convert rest
-function populate(data, ids: string[]){
+function populate(data, pass: boolean, checked){
 
 	//remove later
 	let url: string = '#';
-//	$(url + 'shop').empty();
-	console.log('populating..');
-	console.log('ids test: ' + ids[1]);
 
-	data.forEach(item => {
+	console.log('populating..');
+
+	console.log("Data: " + data);
+
+	if(pass){
+
+		if(checked.has('asc')){
+
+			console.log('ascending');
+			data.sort((a,b) => a.price - b.price);
+		}
+		
+		if(checked.has('des')){
+
+			console.log('descending');
+			data.sort((a,b) => b.price - a.price);
+		}
+
+		if(checked.has('asc') && checked.has('des')){
+
+			alert('only one of ascending or descending');
+			$('#asc').prop('checked', false);
+			$('#des').prop('checked', false);
+			checked.delete('asc');
+			checked.delete('des');
+		}
+		
+		data.forEach(item => {
 		
 		const i = item.id;
 		let inc=(i+2)*(i+2)+i;
 		let itemDiv = inc*inc;
 		let aDiv = inc*inc*inc;
 
-		$('<div>', {
+		const cat = checked.has(item.category);
+		const size = checked.has(item.size.toString());
+		const type = checked.has(item.type);
+
+		const nocheck = checked.size === 0;
+
+		const exdes = checked.size === 1 && checked.has('des');
+		const exasc = checked.size === 1 && checked.has('asc');
+
+		if(nocheck || cat || size || type || exdes || exasc){
+	
+			if(inRange(minMax($('#min'), $('#max')), item.price, $('#min'), $('#max'))){
+				
+
+				$('<div>', {
+
+					id: itemDiv,
+
+					class: 'item'
+
+				}).appendTo('#shop');
+
+				$('<a>', {
+
+					href: url,
+					id: aDiv
+
+				}).appendTo('#'+ itemDiv);
+
+				$('<img>', {
+
+					src: '../img/' + item.src + '.png'
+
+				}).appendTo('#' + aDiv);
+
+
+				txtEle('<h3>', item.name, '#' + aDiv);
+				txtEle('<p>', '$' + item.price, '#' + aDiv);
+				txtEle('<p>', item.category, '#' + aDiv);
+
+				let gen = (item.type == 'M' ? 'Men' : 'Women');
+
+				txtEle('<p>', gen, '#' + aDiv);
+
+				if(item.sale) {
+
+					txtEle('<p>', item.sale, '#' + aDiv);
+				}
+
+				let sizeCheck = '';
+				const itemSize = item.size;
+				const arr = ['XS', ' S', ' M', ' L', ' XL'];
+
+				for(let i=0; i<itemSize+1; ++i) {
+
+					sizeCheck += arr[i];
+				}
+
+				txtEle('<p>', sizeCheck, '#' + aDiv);
+				txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);
+		}
+
+
+	}
+});
+
+
+ }
+
+
+	//data.length = 0;
+
+};
+
+
+function search(data){
+
+
+
+		const srch = $('#search').val().toString().toLowerCase();
+		const notEmpty = srch != undefined && srch.toString() != '';
+
+
+	data.forEach(item => {
+
+		const i = item.id;
+		let inc=(i+2)*(i+2)+i;
+		let itemDiv = inc*inc;
+		let aDiv = inc*inc*inc;
+		const url = '#';
+//account for sizes as well
+		if(notEmpty && (item.id.toString().toLowerCase().includes(srch) || 
+			item.name.toLowerCase().includes(srch) || 
+			item.size.toString().toLowerCase().includes(srch) ||
+			item.category.toLowerCase().includes(srch) ||
+			item.type.toLowerCase().includes(srch))){	
+
+	$('<div>', {
 
 			id: itemDiv,
 
@@ -120,191 +321,56 @@ function populate(data, ids: string[]){
 		}
 
 		txtEle('<p>', sizeCheck, '#' + aDiv);
-		txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);
+		txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);	
 
-});
+	}
 
-
+	});
 };
 
 
 
 
-async function loadItems(){
+async function getItems(){
 
-	let url = '#';
-
-	
 	const resp = await fetch('http://localhost:3000/item');
 	const items = await resp.json();
-
-
-	const arr = ['0', '1', '2', '3', '4', 'Shirts', 'Outdoorwear', 'Pants', 'Footwear', 
-'M', 'F', 'asc', 'des', 'min', 'max', 'apply'];
-
-	const checked = [];
-	let load = true;
-
-	console.log('length: ' + checked.length);
-
-//need defualt display
-//so turn into one or more functions
 	
-	$('#apply').click(function(){ 
-
-		console.log('clicked');
-		checked.length = 0;
-		$('#shop').empty();
-
-		for(let box of arr) {
-
-
-			if($('#' + box).prop('checked')){
-
-				console.log(box);
-				checked.push(box);
-				console.log('new length: ' + checked.length);
-	
-				//add here
-			}
-		}
-
-	//});
-
-
-		
-
-
-		items.forEach(item => {
-
-		const i = item.id;
-		let inc=(i+2)*(i+2)+i;
-		let itemDiv = inc*inc;
-		let aDiv = inc*inc*inc;
-
-		console.log('checked length: ' + checked.length);
-
-		for(let box of checked) {
-			console.log('box ' + box);
-			//fix to include AND logic
-			if( (box == item.category) || (box == item.type) || (box == item.size) ){
-
-			
-				console.log(box);
-
-				$('<div>', {
-
-				id: itemDiv,
-
-				class: 'item'
-
-			}).appendTo('#shop');
-
-			$('<a>', {
-
-				href: url,
-				id: aDiv
-
-			}).appendTo('#'+ itemDiv);
-
-			$('<img>', {
-
-				src: '../img/' + item.src + '.png'
-
-			}).appendTo('#' + aDiv);
-
-
-			txtEle('<h3>', item.name, '#' + aDiv);
-			txtEle('<p>', '$' + item.price, '#' + aDiv);
-			txtEle('<p>', item.category, '#' + aDiv);
-
-			let gen = (item.type == 'M' ? 'Men' : 'Women');
-
-			txtEle('<p>', gen, '#' + aDiv);
-
-			if(parseInt(item.sale) == 1) {
-
-				txtEle('<p>', item.sale, '#' + aDiv);
-			}
-
-			let sizeCheck = '';
-			const itemSize = item.size;
-			const arr = ['XS', ' S', ' M', ' L', ' XL'];
-
-			for(let i=0; i<itemSize+1; ++i) {
-
-				sizeCheck += arr[i];
-			}
-
-			txtEle('<p>', sizeCheck, '#' + aDiv);
-			txtEle('<p>', 'ID: ' + item.id, '#' + aDiv);
-			break;
-			}
-
-		
-		}
-
-				
-		if(checked.length == 0){
-			
-			$('#shop').empty();
-
-			load = false;
-
-			populate(items, arr);
-
-		}
-
-
-			//}
-		
-
-	});
-
-
-		$('#shop').css('display', 'flex');
-		$('#shop').css('flex-wrap', 'wrap');
-
-
-	});
-
-
-	if(checked.length == 0 && load){
-
-
-		for(let id of arr){
-
-			if($('#' + id).prop('checked')){
-
-				console.log("Currently checked: " + id);
-				$('#' + id).prop('checked', false);
-			}
-		}
-
-		populate(items, arr);
-
-		console.log("Checked is empty");
-
-	}		
+	return items;
 
 };
-
-
-
-
-
-
 
 
 
 script.onload = function(){
-
+	
 
 	$(document).ready(function(){
 
-
+		let click=0;
+		const arr = [];
+		const checked = new Map();
+		let pressed = false;
+		const ids = ['0', '1', '2', '3', '4', 'Shirts', 'Outdoorwear', 'Pants', 'Footwear', 
+'M', 'F', 'asc', 'des'];
 
 		console.log("Loaded");
+		
+
+		getItems().then(items => {
+
+			items.forEach(item => {
+
+
+				arr.push(item);
+				console.log('item: ' + item.id);
+
+			});
+
+			populate(arr, true, checked);
+		});
+
+
 
 		$('#b1').click(function(){
 
@@ -336,8 +402,72 @@ script.onload = function(){
 		});
 
 
-		loadItems();
+		ids.forEach(id => {
+
+			$('#' + id).click(function(){
+
+				//check for min/max here
+				if( $('#' + id).is(':checked') ){
+
+					console.log('checked: ' + id);
+					checked.set(id, ++click);
+					console.log('checked size: ' + checked.size);
+
+				}
+				else{
+					console.log('unchecked: ' + id);
+					checked.delete(id);
+					--click;
+					console.log('checked size: ' + checked.size);
+
+				}
+			});
+
+
+
+		});
+
+
+
+		$('#apply').click(function(){
+
+			console.log('pressed');
+
+			//arr.length = 0;
+
+			//need copy of array for modifying
+			//clear shop and display that one
+			$('#shop').empty();
+			populate(arr, true, checked);
+
+			ids.forEach(id => {
+
+				if($('#' + id).prop('checked', true)){
+
+					$('#' + id).prop('checked', false);
+				}
+
+			});
+
+			checked.clear();
+			console.log(click);
+			//arr.length=0;
+
+		});
+
+
+
+		//const items = getItems(); //return from this function
+		//populate(items, true);
+
+		$('#submit').click(function(){
+			console.log('searching...');
+			$('#shop').empty();
+			search(arr);
+		});
 
 	});
+
 };
+
 document.head.appendChild(script);

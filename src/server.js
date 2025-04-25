@@ -36,13 +36,14 @@ ex.get('/item', async (req, res) => {
 ex.listen(port, () => {
 
 	console.log("Server is running");
+
 	
 
 });
 
 
 //misc functions
-
+//can be adjusted for any database entries
 async function lab(){
 
 		const names = ['Plain Tee', 'Tank Top', 'Raincoat', 'Cargo Pants', 'Winter Jacket', 'Rain Boots'];
