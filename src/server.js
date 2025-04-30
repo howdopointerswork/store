@@ -17,6 +17,7 @@ ex.use(express.static(__dirname));
 console.log("here");
 
 //promise for getting entries from items
+
 ex.get('/item', async (req, res) => {
 
 	try{
@@ -31,6 +32,22 @@ ex.get('/item', async (req, res) => {
 	}
 
 });
+
+ex.get('/user', async (req, res) => {
+
+	try{
+
+		const users = await prisma.user.findMany();
+		res.json(users);
+	
+	} catch(error){
+
+		res.status(500).json({ error: 'Error getting data' });
+	}
+
+});
+
+
 
 //listen
 ex.listen(port, () => {

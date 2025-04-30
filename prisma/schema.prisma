@@ -34,5 +34,17 @@ model Item {
 	type String
 
 	src String
+ 
+}
+
+model User {
+
+	id Int @id @default(autoincrement())
+
+	username String
+
+	password String
+
+	src String
 
 }

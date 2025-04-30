@@ -54,7 +54,7 @@ function txtEle(ele, txt, app) {
 
 	}).appendTo(app);
 
-}
+};
 
 
 function minMax(min, max): number{
@@ -340,6 +340,20 @@ async function getItems(){
 
 };
 
+async function getUsers(){
+
+	const resp = await fetch('http://localhost:3000/user');
+	const users = await resp.json();
+
+	return users;
+}
+
+async function authenticate(){
+
+
+
+};
+
 
 
 script.onload = function(){
@@ -348,11 +362,19 @@ script.onload = function(){
 	$(document).ready(function(){
 
 		let click=0;
+		
 		const arr = [];
-		const checked = new Map();
-		let pressed = false;
+		const user_arr = [];
 		const ids = ['0', '1', '2', '3', '4', 'Shirts', 'Outdoorwear', 'Pants', 'Footwear', 
 'M', 'F', 'asc', 'des'];
+
+		const checked = new Map();
+		
+		let pressed = false;
+		let auth = false;
+
+
+
 
 		console.log("Loaded");
 		
@@ -369,6 +391,18 @@ script.onload = function(){
 
 			populate(arr, true, checked);
 		});
+
+		getUsers().then(users => {
+
+			users.forEach(user => {
+
+				user_arr.push(user);
+			});
+		});
+
+
+
+		console.log('users: ' + user_arr);
 
 
 
@@ -400,6 +434,25 @@ script.onload = function(){
 
 			$('#popup').eq(0).css('visibility', 'hidden');
 		});
+
+		$('#acc > img').click(function(){
+
+			$('#drop').css('visibility', 'visible');
+
+			console.log('right here');
+
+		});
+
+		$('#default').click(function(){
+
+			$('#drop').eq(0).css('visibility', 'hidden');
+		
+			console.log('mouse out');
+		
+		});
+
+
+
 
 
 		ids.forEach(id => {
@@ -466,7 +519,12 @@ script.onload = function(){
 			search(arr);
 		});
 
+
+
+
 	});
+
+
 
 };
 

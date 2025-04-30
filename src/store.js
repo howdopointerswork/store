@@ -70,6 +70,7 @@ function txtEle(ele, txt, app) {
         text: txt
     }).appendTo(app);
 }
+;
 function minMax(min, max) {
     var min_ne = (min.val() != undefined && min.val() != '' && !isNaN(min.val()));
     var max_ne = (max.val() != undefined && max.val() != '' && !isNaN(max.val()));
@@ -252,14 +253,40 @@ function getItems() {
     });
 }
 ;
+function getUsers() {
+    return __awaiter(this, void 0, void 0, function () {
+        var resp, users;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch('http://localhost:3000/user')];
+                case 1:
+                    resp = _a.sent();
+                    return [4 /*yield*/, resp.json()];
+                case 2:
+                    users = _a.sent();
+                    return [2 /*return*/, users];
+            }
+        });
+    });
+}
+function authenticate() {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/];
+        });
+    });
+}
+;
 script.onload = function () {
     $(document).ready(function () {
         var click = 0;
         var arr = [];
-        var checked = new Map();
-        var pressed = false;
+        var user_arr = [];
         var ids = ['0', '1', '2', '3', '4', 'Shirts', 'Outdoorwear', 'Pants', 'Footwear',
             'M', 'F', 'asc', 'des'];
+        var checked = new Map();
+        var pressed = false;
+        var auth = false;
         console.log("Loaded");
         getItems().then(function (items) {
             items.forEach(function (item) {
@@ -268,6 +295,12 @@ script.onload = function () {
             });
             populate(arr, true, checked);
         });
+        getUsers().then(function (users) {
+            users.forEach(function (user) {
+                user_arr.push(user);
+            });
+        });
+        console.log('users: ' + user_arr);
         $('#b1').click(function () {
             change('slide1.jpeg', 0);
         });
@@ -283,6 +316,14 @@ script.onload = function () {
         });
         $('#mens').mouseout(function () {
             $('#popup').eq(0).css('visibility', 'hidden');
+        });
+        $('#acc > img').click(function () {
+            $('#drop').css('visibility', 'visible');
+            console.log('right here');
+        });
+        $('#default').click(function () {
+            $('#drop').eq(0).css('visibility', 'hidden');
+            console.log('mouse out');
         });
         ids.forEach(function (id) {
             $('#' + id).click(function () {
