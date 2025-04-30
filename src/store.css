@@ -150,6 +150,8 @@ body{
 
 		}
 
+
+
 	}	
 
 	#pp{
@@ -158,6 +160,11 @@ body{
 		width: 100px;
 
 
+	}
+
+	#msg{
+
+		visibility: hidden;
 	}
 
 	#drop{

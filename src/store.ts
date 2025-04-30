@@ -346,7 +346,7 @@ async function getUsers(){
 	const users = await resp.json();
 
 	return users;
-}
+};
 
 async function authenticate(){
 
@@ -404,7 +404,43 @@ script.onload = function(){
 
 		console.log('users: ' + user_arr);
 
+		$('#login').click(function(){
 
+			console.log('log in');
+
+			const check_user = ($('#username').val() != '' &&  $('#username').val() != undefined);
+			const check_pw = ($('#password').val() != '' &&  $('#password').val() != undefined);
+		
+
+			if(check_user && check_pw){
+
+				console.log('not empty');
+
+				user_arr.forEach(user => {
+
+					if($('#username').val() == user.username && $('#password').val() == user.password){
+
+						auth = true;
+						alert('log in successful');
+					}
+					else{
+
+						//post request here
+						//sign up
+						console.log('sign up');
+						window.location.href = 'signup.html';
+					}
+
+				});
+
+			}
+			else{
+
+				alert('bad');
+				console.log('username: ' + $('#username').val());
+				console.log("password: " + $('#password').val());
+			}
+		});
 
 		$('#b1').click(function(){
 
@@ -439,7 +475,7 @@ script.onload = function(){
 
 			$('#drop').css('visibility', 'visible');
 
-			console.log('right here');
+			console.log('clicked');
 
 		});
 
@@ -447,9 +483,11 @@ script.onload = function(){
 
 			$('#drop').eq(0).css('visibility', 'hidden');
 		
-			console.log('mouse out');
+			console.log('click out');
 		
 		});
+
+
 
 
 
@@ -518,6 +556,7 @@ script.onload = function(){
 			$('#shop').empty();
 			search(arr);
 		});
+
 
 
 
