@@ -85,12 +85,10 @@ function minMax(min, max): number{
 
 function inRange(current: number, value: number, min, max): boolean{
 
-	console.log('current is: ' + current);
 
 	switch(current){
 
 		case 0:
-			console.log('both empty');
 			return true;
 
 
@@ -333,6 +331,7 @@ function search(data){
 
 async function getItems(){
 
+
 	const resp = await fetch('http://localhost:3000/item');
 	const items = await resp.json();
 	
@@ -348,20 +347,114 @@ async function getUsers(){
 	return users;
 };
 
-async function authenticate(){
+async function signUp(username: string, password: string, src: string, email: string){
+
+	const user = {
+
+		username: username,
+		password: password,
+		src: src,
+		email: email,
+		auth: 1
+	}
+
+	try{
+
+		const res = await fetch('http://localhost:3000/user', {
+
+		method: 'POST',
+		
+		headers: {
+			
+			'Content-Type': 'application/json'
+											
+		},
+		
+		body: JSON.stringify(user)
+
+		});
+
+		const data = await res.json();
+
+
+		}
+		
+		catch(error){
+
+			console.error("Error: ", error);
+		}
 
 
 
-};
+
+}
 
 
+async function authenticate(val: number, id: number){
+
+	try{
+
+		const res = await fetch(`http://localhost:3000/user/${id}/auth`, {
+
+		method: "PUT",
+		
+		headers: { 
+
+		"Content-Type": "application/json" },
+		
+		body: JSON.stringify({ auth: val })
+
+		});
+
+		const data = await res.json();
+	}
+	catch(error){
+
+		console.error("Error:", error);
+	}
+	
+
+}
+
+async function loadPage(url: string){
+
+
+	const res = await fetch(url);
+	const content = await res.text();
+
+	$('#all').empty();
+	$('#all').html(content);
+
+}
+
+async function upload(event, auth){
+
+	console.log('uploading...');
+
+	if(auth){
+
+		console.log('to change');
+	}
+
+}
+
+
+
+
+//TO-DO
+
+//Auth checking on server
+//UI should respond accordingly
+//Update using Express (put)
 
 script.onload = function(){
 	
+	let auth, signup = false;
+	let signout = true;
 
 	$(document).ready(function(){
 
-		let click=0;
+		let click = 0;
 		
 		const arr = [];
 		const user_arr = [];
@@ -371,34 +464,47 @@ script.onload = function(){
 		const checked = new Map();
 		
 		let pressed = false;
-		let auth = false;
+		let hold;
+		let current;
 
 
 
 
 		console.log("Loaded");
-		
-
-		getItems().then(items => {
-
-			items.forEach(item => {
 
 
-				arr.push(item);
-				console.log('item: ' + item.id);
 
+		try{
+			getItems().then(items => {
+
+				items.forEach(item => {
+
+					arr.push(item);
+
+				});
+
+				populate(arr, true, checked);
 			});
+		}
+		catch(error){
 
-			populate(arr, true, checked);
-		});
+			console.error("Error: ",error);
+		}
 
-		getUsers().then(users => {
 
-			users.forEach(user => {
+		try{
+			getUsers().then(users => {
 
-				user_arr.push(user);
+				users.forEach(user => {
+
+					user_arr.push(user);
+				});
 			});
-		});
+		}
+		catch(error){
+
+			console.error("Error: ", error);
+		}
 
 
 
@@ -408,39 +514,133 @@ script.onload = function(){
 
 			console.log('log in');
 
+
 			const check_user = ($('#username').val() != '' &&  $('#username').val() != undefined);
 			const check_pw = ($('#password').val() != '' &&  $('#password').val() != undefined);
-		
+			
+			//turn into function
 
-			if(check_user && check_pw){
+			if((check_user && check_pw) && user_arr.length > 0){
 
 				console.log('not empty');
 
-				user_arr.forEach(user => {
+				for(let user of user_arr){
 
-					if($('#username').val() == user.username && $('#password').val() == user.password){
+					if($('#username').val().toString().toLowerCase() == user.username.toLowerCase() && $('#password').val().toString().toLowerCase() == user.password.toLowerCase()){
 
 						auth = true;
 						alert('log in successful');
+						$('#drop').css('visibility', 'hidden');
+						console.log("Current ID: " + user.id);
+						authenticate(1, user.id);
+						current = user;
+						console.log('Authenticated: ' + user.auth);
+						signout = false;
+						$('#signout').css('visibility', 'visible');
+						$('#upload').css('visibility', 'visible');
+						break;
+						//return to home screen as authenticated
 					}
-					else{
+					
+				};
 
-						//post request here
-						//sign up
-						console.log('sign up');
-						window.location.href = 'signup.html';
-					}
-
-				});
+				if(!auth){
+					window.location.href = 'signup.html';
+					//loadPage('signup.html');
+				}
 
 			}
 			else{
 
 				alert('bad');
 				console.log('username: ' + $('#username').val());
-				console.log("password: " + $('#password').val());
+				console.log('password: ' + $('#password').val());
 			}
 		});
+
+
+
+	
+		$('#gosignup').click(function(){
+
+			window.location.href = 'signup.html';
+			//loadPage('signup.html');
+
+
+		});
+		
+
+		$('#signup').click(function(){
+
+				console.log('clicked sign up');
+			
+				let check_username = $('#username_su').val() != '' && $('#username_su').val() != undefined;
+				let check_password = $('#password_su').val() != '' && $('#password_su').val() != undefined;
+				let check_email = $('#email').val() != '' && $('#email').val() != undefined;
+
+				//validate to ensure no duplicates
+				//ensure fields are not empty or undefined
+				//post request
+
+				//make checks into function
+				if(user_arr.length > 0 && check_username && check_password && check_email){
+
+					console.log('Legal');
+
+					for(let user of user_arr){
+
+						if($('#username_su').val().toString().toLowerCase() != user.username.toString().toLowerCase()){
+							if($('#email').val().toString().toLowerCase() != user.email.toString().toLowerCase()){
+								//sign out button?
+								signUp($('#username_su').val().toString(), $('#password_su').val().toString(), 'none', $('#email').val().toString());
+								alert('Sign Up Successful');
+								
+								console.log("Current ID: " + user.id);
+								authenticate(1, user.id);
+								current = user;
+								console.log('Authenticated: ' + user.auth);
+								
+								window.location.href = 'store_home.html';
+
+								//loadPage('store_home.html');
+								auth = true;
+								
+								$('#drop').css('visibility', 'hidden');
+								
+								signout = false;
+								
+								$('#signout').css('visibility', 'visible');
+								$('#upload').css('visibility', 'visible');
+
+
+								
+								break;
+							}
+							else{
+
+								alert('Email already exists');
+							}
+
+						}
+						else{
+							//to be separated
+							alert('Username already exists');
+						}
+
+
+					};
+
+				}
+				else{
+
+					alert('Fill in all fields');
+				}
+	
+		
+
+			});
+
+			
 
 		$('#b1').click(function(){
 
@@ -473,26 +673,52 @@ script.onload = function(){
 
 		$('#acc > img').click(function(){
 
-			$('#drop').css('visibility', 'visible');
+			if(signout){
 
-			console.log('clicked');
+				$('#drop').css('visibility', 'visible');
 
+				console.log('clicked');
+			}
 		});
 
 		$('#default').click(function(){
 
-			$('#drop').eq(0).css('visibility', 'hidden');
+			if(signout){
+
+				$('#drop').eq(0).css('visibility', 'hidden');
 		
-			console.log('click out');
+				console.log('click out');
+
+		}
 		
+		});
+
+
+		$('#signout').click(function(){
+
+			auth = false;
+
+			$('#signout').css('visibility', 'hidden');
+			$('#upload').css('visibility', 'hidden');
+			$('#drop').css('visibility', 'visible');
+
+			console.log("Current ID: " + current.id);
+
+			authenticate(0, current.id);
+			
+			console.log('Authenticated: ' + current.auth);
+
+			current = null;
+			
+			$('#username').val('');
+			$('#password').val('');
+
 		});
 
 
 
 
-
-
-
+	try{
 		ids.forEach(id => {
 
 			$('#' + id).click(function(){
@@ -517,6 +743,11 @@ script.onload = function(){
 
 
 		});
+	}
+	catch(error){
+
+		console.log('Error: ', error);
+	}
 
 
 

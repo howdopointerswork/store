@@ -89,10 +89,8 @@ function minMax(min, max) {
 }
 ;
 function inRange(current, value, min, max) {
-    console.log('current is: ' + current);
     switch (current) {
         case 0:
-            console.log('both empty');
             return true;
         case 1:
             if (value >= Number(min.val()) && value <= Number(max.val())) {
@@ -270,15 +268,109 @@ function getUsers() {
     });
 }
 ;
-function authenticate() {
+function signUp(username, password, src, email) {
+    return __awaiter(this, void 0, void 0, function () {
+        var user, res, data, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    user = {
+                        username: username,
+                        password: password,
+                        src: src,
+                        email: email,
+                        auth: 1
+                    };
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    return [4 /*yield*/, fetch('http://localhost:3000/user', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(user)
+                        })];
+                case 2:
+                    res = _a.sent();
+                    return [4 /*yield*/, res.json()];
+                case 3:
+                    data = _a.sent();
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_1 = _a.sent();
+                    console.error("Error: ", error_1);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+function authenticate(val, id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var res, data, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch("http://localhost:3000/user/".concat(id, "/auth"), {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ auth: val })
+                        })];
+                case 1:
+                    res = _a.sent();
+                    return [4 /*yield*/, res.json()];
+                case 2:
+                    data = _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_2 = _a.sent();
+                    console.error("Error:", error_2);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function loadPage(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var res, content;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch(url)];
+                case 1:
+                    res = _a.sent();
+                    return [4 /*yield*/, res.text()];
+                case 2:
+                    content = _a.sent();
+                    $('#all').empty();
+                    $('#all').html(content);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function upload(event, auth) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
+            console.log('uploading...');
+            if (auth) {
+                console.log('to change');
+            }
             return [2 /*return*/];
         });
     });
 }
-;
+//TO-DO
+//Auth checking on server
+//UI should respond accordingly
+//Update using Express (put)
 script.onload = function () {
+    var auth, signup = false;
+    var signout = true;
     $(document).ready(function () {
         var click = 0;
         var arr = [];
@@ -287,44 +379,114 @@ script.onload = function () {
             'M', 'F', 'asc', 'des'];
         var checked = new Map();
         var pressed = false;
-        var auth = false;
+        var hold;
+        var current;
         console.log("Loaded");
-        getItems().then(function (items) {
-            items.forEach(function (item) {
-                arr.push(item);
-                console.log('item: ' + item.id);
+        try {
+            getItems().then(function (items) {
+                items.forEach(function (item) {
+                    arr.push(item);
+                });
+                populate(arr, true, checked);
             });
-            populate(arr, true, checked);
-        });
-        getUsers().then(function (users) {
-            users.forEach(function (user) {
-                user_arr.push(user);
+        }
+        catch (error) {
+            console.error("Error: ", error);
+        }
+        try {
+            getUsers().then(function (users) {
+                users.forEach(function (user) {
+                    user_arr.push(user);
+                });
             });
-        });
+        }
+        catch (error) {
+            console.error("Error: ", error);
+        }
         console.log('users: ' + user_arr);
         $('#login').click(function () {
             console.log('log in');
             var check_user = ($('#username').val() != '' && $('#username').val() != undefined);
             var check_pw = ($('#password').val() != '' && $('#password').val() != undefined);
-            if (check_user && check_pw) {
+            //turn into function
+            if ((check_user && check_pw) && user_arr.length > 0) {
                 console.log('not empty');
-                user_arr.forEach(function (user) {
-                    if ($('#username').val() == user.username && $('#password').val() == user.password) {
+                for (var _i = 0, user_arr_1 = user_arr; _i < user_arr_1.length; _i++) {
+                    var user = user_arr_1[_i];
+                    if ($('#username').val().toString().toLowerCase() == user.username.toLowerCase() && $('#password').val().toString().toLowerCase() == user.password.toLowerCase()) {
                         auth = true;
                         alert('log in successful');
+                        $('#drop').css('visibility', 'hidden');
+                        console.log("Current ID: " + user.id);
+                        authenticate(1, user.id);
+                        current = user;
+                        console.log('Authenticated: ' + user.auth);
+                        signout = false;
+                        $('#signout').css('visibility', 'visible');
+                        $('#upload').css('visibility', 'visible');
+                        break;
+                        //return to home screen as authenticated
                     }
-                    else {
-                        //post request here
-                        //sign up
-                        console.log('sign up');
-                        window.location.href = 'signup.html';
-                    }
-                });
+                }
+                ;
+                if (!auth) {
+                    window.location.href = 'signup.html';
+                    //loadPage('signup.html');
+                }
             }
             else {
                 alert('bad');
                 console.log('username: ' + $('#username').val());
-                console.log("password: " + $('#password').val());
+                console.log('password: ' + $('#password').val());
+            }
+        });
+        $('#gosignup').click(function () {
+            window.location.href = 'signup.html';
+            //loadPage('signup.html');
+        });
+        $('#signup').click(function () {
+            console.log('clicked sign up');
+            var check_username = $('#username_su').val() != '' && $('#username_su').val() != undefined;
+            var check_password = $('#password_su').val() != '' && $('#password_su').val() != undefined;
+            var check_email = $('#email').val() != '' && $('#email').val() != undefined;
+            //validate to ensure no duplicates
+            //ensure fields are not empty or undefined
+            //post request
+            //make checks into function
+            if (user_arr.length > 0 && check_username && check_password && check_email) {
+                console.log('Legal');
+                for (var _i = 0, user_arr_2 = user_arr; _i < user_arr_2.length; _i++) {
+                    var user = user_arr_2[_i];
+                    if ($('#username_su').val().toString().toLowerCase() != user.username.toString().toLowerCase()) {
+                        if ($('#email').val().toString().toLowerCase() != user.email.toString().toLowerCase()) {
+                            //sign out button?
+                            signUp($('#username_su').val().toString(), $('#password_su').val().toString(), 'none', $('#email').val().toString());
+                            alert('Sign Up Successful');
+                            console.log("Current ID: " + user.id);
+                            authenticate(1, user.id);
+                            current = user;
+                            console.log('Authenticated: ' + user.auth);
+                            window.location.href = 'store_home.html';
+                            //loadPage('store_home.html');
+                            auth = true;
+                            $('#drop').css('visibility', 'hidden');
+                            signout = false;
+                            $('#signout').css('visibility', 'visible');
+                            break;
+                        }
+                        else {
+                            alert('Email already exists');
+                        }
+                    }
+                    else {
+                        //to be separated
+                        alert('Username already exists');
+                    }
+                }
+                ;
+            }
+            else {
+                alert('Fill in all fields');
             }
         });
         $('#b1').click(function () {
@@ -344,29 +506,49 @@ script.onload = function () {
             $('#popup').eq(0).css('visibility', 'hidden');
         });
         $('#acc > img').click(function () {
-            $('#drop').css('visibility', 'visible');
-            console.log('clicked');
+            if (signout) {
+                $('#drop').css('visibility', 'visible');
+                console.log('clicked');
+            }
         });
         $('#default').click(function () {
-            $('#drop').eq(0).css('visibility', 'hidden');
-            console.log('click out');
+            if (signout) {
+                $('#drop').eq(0).css('visibility', 'hidden');
+                console.log('click out');
+            }
         });
-        ids.forEach(function (id) {
-            $('#' + id).click(function () {
-                //check for min/max here
-                if ($('#' + id).is(':checked')) {
-                    console.log('checked: ' + id);
-                    checked.set(id, ++click);
-                    console.log('checked size: ' + checked.size);
-                }
-                else {
-                    console.log('unchecked: ' + id);
-                    checked.delete(id);
-                    --click;
-                    console.log('checked size: ' + checked.size);
-                }
+        $('#signout').click(function () {
+            auth = false;
+            $('#signout').css('visibility', 'hidden');
+            $('#drop').css('visibility', 'visible');
+            console.log("Current ID: " + current.id);
+            authenticate(0, current.id);
+            console.log('Authenticated: ' + current.auth);
+            current = null;
+            $('#username').val('');
+            $('#password').val('');
+        });
+        try {
+            ids.forEach(function (id) {
+                $('#' + id).click(function () {
+                    //check for min/max here
+                    if ($('#' + id).is(':checked')) {
+                        console.log('checked: ' + id);
+                        checked.set(id, ++click);
+                        console.log('checked size: ' + checked.size);
+                    }
+                    else {
+                        console.log('unchecked: ' + id);
+                        checked.delete(id);
+                        --click;
+                        console.log('checked size: ' + checked.size);
+                    }
+                });
             });
-        });
+        }
+        catch (error) {
+            console.log('Error: ', error);
+        }
         $('#apply').click(function () {
             console.log('pressed');
             //arr.length = 0;

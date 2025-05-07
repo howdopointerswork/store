@@ -14,7 +14,7 @@
 
 	
 	<body>
-
+		<div id="all">
 		<div id="top">
 			<h1 class="ctr"><a href="store_home.html">Jamaux</a></h1>
 			<p class="ctr" id="sub">Beauty &mdash; Unique</p>
@@ -22,7 +22,9 @@
 			<div id="acc">
 				<!--take out src later and handle in store.ts-->
 					<img src="../img/default.png" id="pp">
+					<input type="file" id="upload" onchange="upload(event, auth)">
 					<p id="msg">Hello, <span id="display">Username</span></p>
+					<button id="signout">Sign Out</button>
 
 				<div id="drop">
 			
@@ -31,6 +33,11 @@
 						<label for="password">Password</label>
 						<input type="password" name="password" id="password">
 						<button id="login">Log In</button>
+						<button id="gosignup" style="margin-left: 1em">Sign Up</button>
+
+
+
+						<!--button for sign up here-->
 			
 				</div>
 				<!--<h3 class="ctr">Account</h3>-->
@@ -182,6 +189,7 @@
 			<footer>
 				<p><i>Jamaux Collections Ltd. &copy; 2025</i></p>
 			</footer>
+		</div>
 	</body>
 
 </html>

@@ -97,6 +97,9 @@ body{
 
 
 	h1{
+
+		color: white;
+
 		a{
 			text-decoration: none;
 			color: white;
@@ -163,6 +166,16 @@ body{
 	}
 
 	#msg{
+
+		visibility: hidden;
+	}
+
+	#signout{
+
+		visibility: hidden;
+	}
+
+	#upload{
 
 		visibility: hidden;
 	}
@@ -408,6 +421,25 @@ body{
 		text-align: center;
 		color: white;
 		border-top: 2px solid white;
+	}
+
+	#su{
+
+		text-align: center;
+		color: white;
+
+		input[type="text"], input[type="password"]{
+
+			display: block;
+			margin: 0 auto;
+			margin-bottom: 2em;
+		}
+
+		h1{
+
+			margin-bottom: 2em;
+		}
+
 	}
 
 /*}*/

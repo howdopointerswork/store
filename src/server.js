@@ -14,11 +14,15 @@ ex.use(cors());
 //serve html
 ex.use(express.static(__dirname));
 
+ex.use(express.json());
+
 console.log("here");
+
 
 //promise for getting entries from items
 
 ex.get('/item', async (req, res) => {
+
 
 	try{
 		//get all entries from items
@@ -47,6 +51,56 @@ ex.get('/user', async (req, res) => {
 
 });
 
+
+ex.post('/user', async (req, res) => {
+
+
+	const { username, password, src, email, auth } = req.body;
+
+	try{
+
+		const user = await prisma.user.create({
+
+			data: { username, password, src, email, auth }
+		});
+		res.status(201).json(user);
+	}
+	catch(error){
+ 
+		console.error("Could not create user:",error);
+		res.status(400).json({ error: 'Failed' });
+	}
+
+});
+
+
+//ex.put here
+ex.put('/user/:id/auth', async (req, res) => {
+
+	const idfind = parseInt(req.params.id);
+
+	const { auth } = req.body;
+
+
+
+	try{
+
+		const auth_update = await prisma.user.update({
+
+			where: { id: idfind },
+			data: { auth },
+
+		});
+
+		res.json(auth_update);
+	}
+	catch(error){
+
+		console.error("Problem updating:", error);
+		res.status(400).json({ error: "Update Failed"} );
+	}
+
+});
 
 
 //listen
