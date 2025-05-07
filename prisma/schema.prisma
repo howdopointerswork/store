@@ -47,4 +47,8 @@ model User {
 
 	src String
 
+	email String
+
+	auth Int
+
 }
